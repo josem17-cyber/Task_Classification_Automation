@@ -1,0 +1,5 @@
+/.venv
+/.vscode
+/__pycache__
+/model.h5
+/data

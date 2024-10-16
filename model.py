@@ -32,10 +32,10 @@ def create_model(input_dim, num_classes_categoria, num_classes_dueno):
 
     model = Model(inputs=input_layer, outputs=[output1, output2])
     model.compile(optimizer=Adam(),
-                  loss={'categoria_output': 'sparse_categorical_crossentropy',
+                loss={'categoria_output': 'sparse_categorical_crossentropy',
                         'dueno_output': 'sparse_categorical_crossentropy'},
-                  metrics={'categoria_output': 'accuracy',
-                           'dueno_output': 'accuracy'})
+                metrics={'categoria_output': 'accuracy',
+                        'dueno_output': 'accuracy'})
     return model
 
 if __name__ == "__main__":
@@ -58,7 +58,7 @@ if __name__ == "__main__":
     model = create_model(X.shape[1], num_classes_categoria, num_classes_dueno)
     early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
     model.fit(X, {'categoria_output': y_categoria,
-                  'dueno_output': y_dueno},
-              epochs=1000, batch_size=32, validation_split=0.2, callbacks=[early_stopping])
+                'dueno_output': y_dueno},
+            epochs=1000, batch_size=32, validation_split=0.2, callbacks=[early_stopping])
     model.save('model.h5')
     print("Model Saved Succesfully!!")

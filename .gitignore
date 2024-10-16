@@ -3,3 +3,4 @@
 /__pycache__
 /model.h5
 /data
+/.devcontainer

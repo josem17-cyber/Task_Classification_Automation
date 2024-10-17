@@ -30,39 +30,11 @@ def predict_category(subject, tfidf, model, label_encoders):
     predictions = model.predict(X_text)
 
     predicted_categories = {}
-    for i, col in enumerate(['Categoria', 'Dueño']):
+    for i, col in enumerate(['Categoria']):
         predicted_categories[col] = label_encoders[col].inverse_transform([np.argmax(predictions[i])])[0]
 
-    # Apply owner assignment conditions
     categoria = predicted_categories['Categoria']
-    dueno = predicted_categories['Dueño']
     #idioma = predicted_categories['Idioma']
-
-    if categoria == 'PREP':
-        predicted_categories['Dueño'] = 'OM'
-        predicted_categories['Impacto'] = 'C'
-        predicted_categories['Tiempo'] = '2'
-    elif categoria == 'CT':
-        predicted_categories['Dueño'] = 'AB'
-    elif categoria == 'OREP':
-        predicted_categories['Dueño'] = 'OM' if np.random.rand() < 0.5 else 'LG'
-        predicted_categories['Impacto'] = 'C'
-        predicted_categories['Tiempo'] = '2'
-    elif categoria == 'OMOD':
-        predicted_categories['Impacto'] = 'D'
-        predicted_categories['Tiempo'] = '3'
-    elif categoria == 'I':
-        predicted_categories['Impacto'] = 'C'
-        predicted_categories['Tiempo'] = '3'
-    elif categoria == 'PMOD':
-        predicted_categories['Impacto'] = 'D'
-        predicted_categories['Tiempo'] = '3'
-    elif categoria == 'SEG':
-        predicted_categories['Impacto'] = 'C'
-        predicted_categories['Tiempo'] = '3'
-    elif categoria == 'SAT':
-        predicted_categories['Impacto'] = 'C'
-        predicted_categories['Tiempo'] = '3'
 
 
     return predicted_categories
@@ -71,7 +43,7 @@ X, tfidf, label_encoders, model = load_resources()
 
 st.title("Tarea Classification Predictor")
 
-subject = st.text_input("Subject / Conversation", "Type the subject here")
+subject = st.text_input("Subject / Conversation", placeholder="Type the subject here")
 
 if st.button("Predict"):
     predicted_categories = predict_category(subject, tfidf, model, label_encoders)

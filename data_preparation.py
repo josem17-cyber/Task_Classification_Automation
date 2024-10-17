@@ -42,18 +42,19 @@ def load_and_prepare_data(file_path):
         'Impacto': 'first'  # Promediamos el impacto
     }).reset_index()
 
-    # allowed_owners = ["LC", "LG", "OM", "MLM", "FD", "AB", "DC", "JG"]
     # df = df[df['eml_dueño'].isin(allowed_owners)]
+    # allowed_owners = ["LC", "LG", "OM", "MLM", "FD", "AB", "DC", "JG"]
 
     # Selección de las columnas relevantes
-    df = df[['Cuerpo', 'Dueño', 'Categoria']]
-
-    # Convertimos a str toda la columna
-    # df['tar_subject'] = df['tar_subject'].astype(str)
-
+    df = df[['Cuerpo', 'Categoria']]
+    
+    categorias_a_mantener = ['SEG', 'OMOD', 'PREP', 'OREP', 'PMOD', 'SAT', 'I']
+    
+    df = df[df['Categoria'].isin(categorias_a_mantener)]
+    
     # Codificación de etiquetas
     label_encoders = {}
-    for column in ['Dueño', 'Categoria']:
+    for column in ['Categoria']:
         le = LabelEncoder()
         df[column] = le.fit_transform(df[column])
         label_encoders[column] = le
@@ -64,7 +65,7 @@ def load_and_prepare_data(file_path):
 
     # Asignar valores del modelo
     X = X_text
-    y = df[['Categoria', 'Dueño']].values
+    y = df[['Categoria']].values
 
     return X, y, tfidf, label_encoders
 

@@ -3,19 +3,20 @@
 - Hemos simplificado el código para que solo prediga la categoría y no el dueño que ya no tiene sentido.
 - Hemos reducido el número de categorías a predecir, ya que no había suficientes datos en las demás categorías para que fuera efectivo
 - Hemos creado un "classification_report" para ver la predicción de la categoría por tipo de tarea. Este ha sido el resultado:
-    precision    recall  f1-score   support
 
-           I       0.81      0.82      0.81      1305
-        OMOD       0.83      0.78      0.81      2714
-        OREP       0.80      0.86      0.83      2478
-        PMOD       0.74      0.39      0.51      2023
-        PREP       0.66      0.88      0.75      2586
-         SAT       0.87      0.82      0.85      1314
-         SEG       0.90      0.93      0.92      3196
+| Clase  | Precisión | Recall  | F1-Score | Soporte |
+|--------|-----------|---------|----------|---------|
+| I      | 0.81      | 0.82    | 0.81     | 1305    |
+| OMOD   | 0.83      | 0.78    | 0.81     | 2714    |
+| OREP   | 0.80      | 0.86    | 0.83     | 2478    |
+| PMOD   | 0.74      | 0.39    | 0.51     | 2023    |
+| PREP   | 0.66      | 0.88    | 0.75     | 2586    |
+| SAT    | 0.87      | 0.82    | 0.85     | 1314    |
+| SEG    | 0.90      | 0.93    | 0.92     | 3196    |
+| **Exactitud (accuracy)** |  |         | 0.80     | 15616   |
+| **Promedio Macro** | 0.80      | 0.78    | 0.78     | 15616   |
+| **Promedio Ponderado** | 0.80      | 0.80    | 0.79     | 15616   |
 
-    accuracy                           0.80     15616
-   macro avg       0.80      0.78      0.78     15616
-weighted avg       0.80      0.80      0.79     15616
 
 **CONCLUSIONES**
 

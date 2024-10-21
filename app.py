@@ -7,7 +7,7 @@ from data_preparation import load_and_prepare_data
 
 @st.cache_resource
 def load_resources():
-    file_path = 'data/Automatizacion_Clasificacion_EDA_HIDRAL.xlsx'
+    file_path = 'data/Consulta_JMA.xlsx'
     X, _, tfidf, label_encoders = load_and_prepare_data(file_path)
     model = load_model('model.h5')
     return X, tfidf, label_encoders, model

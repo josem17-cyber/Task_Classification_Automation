@@ -47,7 +47,7 @@ def create_model(input_dim, num_classes_categoria):
     return model
 
 if __name__ == "__main__":
-    file_path = 'data/Automatizacion_Clasificacion_EDA_HIDRAL.xlsx'
+    file_path = 'data/Consulta_JMA.xlsx'
     X, y, _, label_encoders = load_and_prepare_data(file_path)
     y_categoria = y.astype(int)
 

@@ -27,30 +27,18 @@ def load_and_prepare_data(file_path):
     # Completamos los valores faltantes en cada columna
     df['Categoria'] = df['Categoria'].fillna("sin categoría")
     df['Cuerpo'] = df['Cuerpo'].fillna("sin cuerpo")
-    df['Tiempo'] = df['Tiempo'].fillna("sin tiempo")
-    df['Impacto'] = df['Impacto'].fillna("sin impacto")
-
+    
     # Agrupar por CodigoTarea y unir los correos electrónicos en una sola entrada
-    df = df.groupby('CodigoTarea').agg({
-        'IDEmail': 'first',  # Suponemos que el email no cambia, tomamos el primero
-        'Cuerpo': '.'.join,  # Unificamos los cuerpos en una sola cadena
-        'Dueño': 'first',  # Suponemos que el dueño no cambia, tomamos el primero
-        'FechaTerminado': 'first',  # Suponemos que la fecha no cambia, tomamos la primera
-        'Categoria': 'first',  # Suponemos que la categoría no cambia, tomamos la primera
-        'Idioma': 'first',  # Suponemos que el idioma no cambia, tomamos el primero
-        'Tiempo': 'first',  # Sumamos el tiempo
-        'Impacto': 'first'  # Promediamos el impacto
+    df = df.groupby(by='CodigoTarea').agg({
+        'IDEmail': 'first',
+        'Cuerpo': 'first',
+        'FechaCreacion': 'first',
+        'Categoria': 'first',
+        'Idioma': 'first'
     }).reset_index()
-
-    # df = df[df['eml_dueño'].isin(allowed_owners)]
-    # allowed_owners = ["LC", "LG", "OM", "MLM", "FD", "AB", "DC", "JG"]
-
+    
     # Selección de las columnas relevantes
     df = df[['Cuerpo', 'Categoria']]
-    
-    categorias_a_mantener = ['SEG', 'OMOD', 'PREP', 'OREP', 'PMOD', 'SAT', 'I']
-    
-    df = df[df['Categoria'].isin(categorias_a_mantener)]
     
     # Codificación de etiquetas
     label_encoders = {}
@@ -71,7 +59,7 @@ def load_and_prepare_data(file_path):
 
 
 if __name__ == "__main__":
-    path = 'data/Automatizacion_Clasificacion_EDA_HIDRAL.xlsx'
+    path = 'data/Consulta_JMA.xlsx'
     X, y, tfidf, label_encoders = load_and_prepare_data(path)
 
     # Guardar los objetos procesados si es necesario

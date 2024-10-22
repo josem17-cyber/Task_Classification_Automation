@@ -101,3 +101,43 @@ Abajo se muestra los resultados, al usar solo español, tenemos que aplicar STOP
 [Incrustaciones de palabras Tensorflow](https://www.tensorflow.org/text/guide/word_embeddings?hl=es-419)
 
 [Una guía rápida para la limpieza de texto usando l](https://www.kaggle.com/code/edwight/una-gu-a-r-pida-para-la-limpieza-de-texto-usando-l#Removing-Stopwords)
+
+
+### Día 22/10/2024 HIDRAL
+
+- Lo que hemos realizado hoy básicamente ha sido la limpieza del texto como tal. Hemos conseguido limpiar el texto de tal manera que ahora se han eliminado los caracteres que son inncesarios para el modelo. Además de esto hemos conseguido quitar las StopWords, de esta manera mantenemos las palabras que sirven al modelo únicamente.
+- Hemos empezado a trabajar en los Word Embeddings, creo que es un tema bastante profundo y que no se debe tomar a la ligera, pero podemos empezar por crear nuestros propios Embeddings, aunque creandolos en combinación con Word Embeddings genéricos.
+
+**CONCLUSIONES**
+
+- El modelo está bien preparado para que le apliquemos unos Embeddings a modo de preprocesamiento para la red neuronal de Keras. Actualmente el TF - IDF nos saca del paso pero sabemos que no es la mejor opción.
+- Podemos observar que los datos en los PMOD y PREP no son los deseados, por lo que vamos a unificar todos los PMOD y PREP y llamarlos P para que de esta manera podamos sacar la conclusión correcta de si es capaz el modelo de saber que es un pedido o no.
+- Estas han sido las precisiones del modelo para este caso, como podemos observar no han cambiado demasiado, esto es debido probablemente a que el modelo ya ha tomado los caracteres que hemos eliminado como innecesarios para su aprendizaje
+  
+  | Clase            | Precisión | Recall | F1-Score | Soporte |
+  | ---------------- | --------- | ------ | -------- | ------- |
+  | I                | 0.81      | 0.72   | 0.76     | 1486    |
+  | OMOD             | 0.85      | 0.66   | 0.74     | 4021    |
+  | OREP             | 0.71      | 0.88   | 0.79     | 3689    |
+  | PMOD             | 0.73      | 0.34   | 0.46     | 2999    |
+  | PREP             | 0.60      | 0.87   | 0.71     | 3499    |
+  | SAT              | 0.78      | 0.77   | 0.77     | 1386    |
+  | SEG              | 0.90      | 0.95   | 0.92     | 4306    |
+  | **Exactitud**    |           |        | 0.76     | 21386   |
+  | **Macro Avg**    | 0.77      | 0.74   | 0.74     | 21386   |
+  | **Weighted Avg** | 0.77      | 0.76   | 0.74     | 21386   |
+
+
+**POR HACER** 
+
+- Llamar a las categorias PREP y PMOD como P, veremos la precisión en este caso
+- Utilizar los datos de 2023 como entrenamiento y los datos de 2024 como test
+- Word Embeddings (Genéricos + Creados) -> Embeddings usando Transformers(BERT...) -> LLM, ChatGPT, etc...
+
+**RECURSOS**
+
+[Incrustaciones de palabras Tensorflow](https://www.tensorflow.org/text/guide/word_embeddings?hl=es-419)
+
+[Una guía rápida para la limpieza de texto usando l](https://www.kaggle.com/code/edwight/una-gu-a-r-pida-para-la-limpieza-de-texto-usando-l#Removing-Stopwords)
+
+[How to Develop Word Embeddings in Python with Gensim](https://machinelearningmastery.com/develop-word-embeddings-python-gensim/)

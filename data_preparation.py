@@ -1,8 +1,13 @@
 # data_preparation.py
 import pandas as pd
+import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from sklearn.feature_extraction.text import TfidfVectorizer
 import openpyxl
+import re
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
 
 def load_and_prepare_data(file_path):
     """
@@ -36,10 +41,47 @@ def load_and_prepare_data(file_path):
         'Categoria': 'first',
         'Idioma': 'first'
     }).reset_index()
+
+    # Asegúrate de descargar las stopwords
+    nltk.download('stopwords')
+
+    # Función para limpiar el texto
+    def clean_text(text):
+        # Eliminar 'xd'
+        text = re.sub(r'\bxd\b', '', text)
+
+        # Eliminar caracteres no deseados (como 'x000d')
+        text = re.sub(r'\bx000d\b', '', text)
+
+        # Eliminar URLs y correos electrónicos
+        text = re.sub(r'http\S+|www\S+|https\S+|mailto:\S+', '', text)
+
+        # Convertir a minúsculas
+        text = text.lower()
+
+        # Eliminar caracteres no alfabéticos y espacios extra
+        text = re.sub(r'[^a-záéíóúñü\s]', '', text)
+
+        # Dividir el texto en palabras
+        words = text.split()
+        
+        words = word_tokenize(text)
+
+        # Filtrar stopwords
+        spanish_stopwords = set(stopwords.words('spanish'))
+        filtered_words = [word for word in words if word not in spanish_stopwords]
+        
+
+        return ' '.join(filtered_words)
+
+    # Supongamos que df_grouped ya está definido
+    # Aplica la función a cada fila de la columna 'Cuerpo'
+    df['Cuerpo'] = df['Cuerpo'].apply(clean_text)
+
     
     # Selección de las columnas relevantes
     df = df[['Cuerpo', 'Categoria']]
-    
+
     # Codificación de etiquetas
     label_encoders = {}
     for column in ['Categoria']:

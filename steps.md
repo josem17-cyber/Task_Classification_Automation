@@ -141,3 +141,5 @@ Abajo se muestra los resultados, al usar solo español, tenemos que aplicar STOP
 [Una guía rápida para la limpieza de texto usando l](https://www.kaggle.com/code/edwight/una-gu-a-r-pida-para-la-limpieza-de-texto-usando-l#Removing-Stopwords)
 
 [How to Develop Word Embeddings in Python with Gensim](https://machinelearningmastery.com/develop-word-embeddings-python-gensim/)
+
+[pypdf](https://pypdf.readthedocs.io/en/stable/)

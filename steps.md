@@ -143,3 +143,111 @@ Abajo se muestra los resultados, al usar solo español, tenemos que aplicar STOP
 [How to Develop Word Embeddings in Python with Gensim](https://machinelearningmastery.com/develop-word-embeddings-python-gensim/)
 
 [pypdf](https://pypdf.readthedocs.io/en/stable/)
+
+
+### Día 23/10/2024 HIDRAL
+
+- Con el fin de concretar la precisión entre Ofertas y Pedidos, he decidido unir los PREP y PMOD en una misma categoría llamada P, de esta manera podemos ver cual es la precisión del modelo a la hora de predecir si la tarea es un pedido o no, indistintamente de si es PREP o PMOD. Como vemos la precisión para los pedidos en general es bastante buena funcionando en el 95% de los casos, esto puede ser debido a que probablemente en todos estos indica adjunto pedido por lo que el modelo lo saca de manera correcta.
+
+  | Clase        | precision | recall | f1-score | support |
+  | ------------ | --------- | ------ | -------- | ------- |
+  | I            | 0.74      | 0.68   | 0.71     | 1486    |
+  | OMOD         | 0.75      | 0.75   | 0.75     | 4021    |
+  | OREP         | 0.76      | 0.78   | 0.77     | 3689    |
+  | P            | 0.96      | 0.95   | 0.95     | 6498    |
+  | SAT          | 0.73      | 0.68   | 0.71     | 1386    |
+  | SEG          | 0.91      | 0.94   | 0.92     | 4306    |
+  | accuracy     |           |        | 0.85     | 21386   |
+  | macro avg    | 0.81      | 0.80   | 0.80     | 21386   |
+  | weighted avg | 0.85      | 0.85   | 0.85     | 21386   |
+
+- Por otra parte he decidido también unir Ofertas, para ver si la precisión general en ellas era buena o no. Y resulta que esto es así, aunque habiamos conseguido una precisión de 74 o 75 entre OREP y OMOD, ahora tenemos casi un 90 % de aciertos en cuanto a las ofertas generales. 
+
+  | Clase        | precision | recall | f1-score | support |
+  | ------------ | --------- | ------ | -------- | ------- |
+  | I            | 0.75      | 0.45   | 0.56     | 1486    |
+  | O            | 0.88      | 0.95   | 0.91     | 7710    |
+  | P            | 0.95      | 0.94   | 0.95     | 6498    |
+  | SAT          | 0.60      | 0.65   | 0.63     | 1386    |
+  | SEG          | 0.91      | 0.90   | 0.91     | 4306    |
+  | accuracy     |           |        | 0.88     | 21386   |
+  | macro avg    | 0.82      | 0.78   | 0.79     | 21386   |
+  | weighted avg | 0.88      | 0.88   | 0.88     | 21386   |
+
+- Al realizar el paso anterior ví que las SAT e I habían sido afectadas de manera negativa. Por lo que he decidido también englobarlas en una misma categoría aunque a priori puede no tener mucho sentido. Vemos que en general todas las métricas están por encima del 80% por lo que podríamos considerar un éxito este modelo, teniendo en cuenta que obviamente las categorías no nos sirven así directamente.
+
+  | Clase        | precision | recall | f1-score | support |
+  | ------------ | --------- | ------ | -------- | ------- |
+  | I            | 0.80      | 0.81   | 0.80     | 2872    |
+  | O            | 0.92      | 0.92   | 0.92     | 7710    |
+  | P            | 0.92      | 0.96   | 0.94     | 6498    |
+  | SEG          | 0.94      | 0.87   | 0.90     | 4306    |
+  | accuracy     |           |        | 0.91     | 21386   |
+  | macro avg    | 0.89      | 0.89   | 0.89     | 21386   |
+  | weighted avg | 0.91      | 0.91   | 0.91     | 21386   |
+
+- Hemos empezado a emplear **pypdf** para convertir a texto de los PDFs adjuntos, de esta manera los podríamos fusionar con la tarea (de pedidos en este caso) para que las clasifique debidamente (PREP o PMOD). A continuación, está el código que se emplea para leer cada PDF y convertirlo a texto:
+
+  ``` python
+  import pypdf
+
+  reader = pypdf.PdfReader("../PDF/RD59SP0129_EN_26412745_715394_1078.pdf")
+  page = reader.pages[0]
+  print(page.extract_text(0))
+  ```
+
+- Para el preprocesamiento de nuestro modelo hemos empezado a aprender a crear nuestros propios **WordEmbeddings** utilizando **Gensim**. Para ello utilizaremos la clase **Word2Vec**, la cual funciona como veremos más abajo:
+  
+  ``` python
+  from gensim.models import Word2Vec
+  # define training data
+  sentences = [['this', 'is', 'the', 'first', 'sentence', 'for', 'word2vec'],
+               ['this', 'is', 'the', 'second', 'sentence'],
+               ['yet', 'another', 'sentence'],
+               ['one', 'more', 'sentence'],
+               ['and', 'the', 'final', 'sentence']]
+  # train model
+  model = Word2Vec(sentences, min_count=1)
+  # summarize the loaded model
+  print(model)
+  # summarize vocabulary
+  words = list(model.wv.vocab)
+  print(words)
+  # access vector for one word
+  print(model['sentence'])
+  # save model
+  model.save('model.bin')
+  # load model
+  new_model = Word2Vec.load('model.bin')
+  print(new_model)
+  ```
+
+**CONCLUSIONES**
+
+- El modelo funciona muy bien cuando se trata de predecir si el correo consiste en una oferta, pedido, seguimiento o incidencia. Sabemos que para que funcione en las categorías específicas tenemos que profundicar en el preprocesamiento.
+- Una gran solución para los PREP y PMOD, es leer los documentos PDF, no sé que me dirá el equipo de informática de como acceder a estos documentos pero ya podemos ofrecer una solución para esto.
+- Tenemos que seguir profundizando en la creación de Embeddings, pero teniendo en cuenta que lo más lógico es fusionarlo con uno que ya exista, lo veremos más adelante
+
+**POR HACER**
+
+- Word Embeddings (Genéricos + Creados) -> Embeddings usando Transformers(BERT...) -> LLM, ChatGPT, etc...
+
+**CONCEPTOS**
+
+- El significado de las métricas del **classification_report**:
+  - *precision* : Porcentaje de predicciones positivas correctas en relación con el total de predicciones positivas
+  - *recall* : Porcentaje de predicciones positivas correctas en relación con el total de positivos reales
+  - *f1-score* : Media armónica ponderada de precision y recall. Cuanto más cercano es a uno mejor es el modelo
+    $$
+    F1 = \frac{\text{precision} \cdot \text{recall}}{\text{precision} + \text{recall}}
+    $$
+
+**RECURSOS**
+
+[Incrustaciones de palabras Tensorflow](https://www.tensorflow.org/text/guide/word_embeddings?hl=es-419)
+
+[Una guía rápida para la limpieza de texto usando l](https://www.kaggle.com/code/edwight/una-gu-a-r-pida-para-la-limpieza-de-texto-usando-l#Removing-Stopwords)
+
+[How to Develop Word Embeddings in Python with Gensim](https://machinelearningmastery.com/develop-word-embeddings-python-gensim/)
+
+[pypdf](https://pypdf.readthedocs.io/en/stable/)

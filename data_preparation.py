@@ -41,6 +41,8 @@ def load_and_prepare_data(file_path):
         'Categoria': 'first',
         'Idioma': 'first'
     }).reset_index()
+    
+    # df['Categoria'] = df['Categoria'].replace({'PREP': 'P', 'PMOD': 'P', 'OMOD' : 'O', 'OREP' : 'O', 'SAT' : 'I'})
 
     # Asegúrate de descargar las stopwords
     nltk.download('stopwords')

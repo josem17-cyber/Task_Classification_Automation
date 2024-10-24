@@ -1,22 +1,21 @@
 # model.py
 import numpy as np
 import matplotlib.pyplot as plt
-from tensorflow.keras.models import Model # type: ignore
-from tensorflow.keras.layers import Input, Dense, Dropout # type: ignore
-from tensorflow.keras.optimizers import Adam # type: ignore
+from tensorflow.keras.models import Model  # type: ignore
+from tensorflow.keras.layers import Input, Dense, Dropout  # type: ignore
+from tensorflow.keras.optimizers import Adam  # type: ignore
 from data_preparation import load_and_prepare_data
-from keras.callbacks import EarlyStopping # type: ignore
+from keras.callbacks import EarlyStopping  # type: ignore
 import os
 import warnings
 import tensorflow as tf
 from sklearn.metrics import classification_report
+from gensim.models import Word2Vec
 
 # Suprimir mensajes de advertencia
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suprimir logs de TensorFlow
 tf.get_logger().setLevel('ERROR')  # Suprimir logs de TensorFlow
 warnings.filterwarnings('ignore')  # Suprimir advertencias de otras librerías
-
-
 
 def create_model(input_dim, num_classes_categoria):
     """
@@ -25,7 +24,6 @@ def create_model(input_dim, num_classes_categoria):
     Args:
         input_dim (int): Dimensión de la entrada (número de características).
         num_classes_categoria (int): Número de clases para la salida 'Categoria'.
-        num_classes_dueno (int): Número de clases para la salida 'Dueño'.
 
     Returns:
         model (keras.Model): Modelo de Keras compilado listo para el entrenamiento.
@@ -42,13 +40,18 @@ def create_model(input_dim, num_classes_categoria):
 
     model = Model(inputs=input_layer, outputs=output1)
     model.compile(optimizer=Adam(),
-                loss={'categoria_output': 'sparse_categorical_crossentropy'},
-                metrics={'categoria_output': 'accuracy'})
+                  loss={'categoria_output': 'sparse_categorical_crossentropy'},
+                  metrics={'categoria_output': 'accuracy'})
     return model
 
 if __name__ == "__main__":
     file_path = 'data/Consulta_JMA.xlsx'
-    X, y, _, label_encoders = load_and_prepare_data(file_path)
+    
+    # Carga tu modelo de Word2Vec
+    word2vec_model = Word2Vec.load('model.bin')  # Asegúrate de que el modelo esté guardado
+    
+    # Cargar y preparar datos
+    X, y, label_encoders = load_and_prepare_data(file_path, word2vec_model)
     y_categoria = y.astype(int)
 
     num_classes_categoria = len(label_encoders['Categoria'].classes_)
@@ -62,11 +65,12 @@ if __name__ == "__main__":
     model = create_model(X.shape[1], num_classes_categoria)
     early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
     model.fit(X, {'categoria_output': y_categoria},
-            epochs=1000, batch_size=32, validation_split=0.2, callbacks=[early_stopping])
+              epochs=1000, batch_size=32, validation_split=0.2, callbacks=[early_stopping])
+    
     model.save('model.h5')
-    print("Model Saved Succesfully!!")
+    print("Model Saved Successfully!!")
 
-# Hacer predicciones
+    # Hacer predicciones
     y_pred = model.predict(X)
     y_pred_classes = np.argmax(y_pred, axis=1)  # Obtener las clases predichas
 

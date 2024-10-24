@@ -251,3 +251,60 @@ Abajo se muestra los resultados, al usar solo español, tenemos que aplicar STOP
 [How to Develop Word Embeddings in Python with Gensim](https://machinelearningmastery.com/develop-word-embeddings-python-gensim/)
 
 [pypdf](https://pypdf.readthedocs.io/en/stable/)
+
+### Día 24/10/2024 HIDRAL (EMBEDDINGS)
+
+- Empezamos con la creación de embeddings. Hemos conseguido que el código funcione correctamente, pero evidentemente los porcentajes no son tan buenos. Estos son los resultados de el modelo para el primer caso:
+  
+  | Clase            | Precision | Recall | F1-score | Support |
+  | ---------------- | --------- | ------ | -------- | ------- |
+  | I                | 0.61      | 0.44   | 0.51     | 1486    |
+  | OMOD             | 0.64      | 0.48   | 0.55     | 4021    |
+  | OREP             | 0.58      | 0.80   | 0.67     | 3689    |
+  | PMOD             | 0.73      | 0.28   | 0.40     | 2999    |
+  | PREP             | 0.57      | 0.85   | 0.68     | 3499    |
+  | SAT              | 0.62      | 0.50   | 0.55     | 1386    |
+  | SEG              | 0.83      | 0.91   | 0.87     | 4306    |
+  | **Accuracy**     |           |        | 0.65     | 21386   |
+  | **Macro avg**    | 0.65      | 0.61   | 0.60     | 21386   |
+  | **Weighted avg** | 0.67      | 0.65   | 0.63     | 21386   |
+
+- Después he probado a simplificar las categorías, y el resultado es mucho mejor. Seguiremos haciendo pruebas
+  
+  | Clase            | Precision | Recall | F1-score | Support |
+  | ---------------- | --------- | ------ | -------- | ------- |
+  | I                | 0.75      | 0.63   | 0.68     | 2872    |
+  | O                | 0.86      | 0.88   | 0.87     | 7710    |
+  | P                | 0.92      | 0.92   | 0.92     | 6498    |
+  | SEG              | 0.84      | 0.89   | 0.87     | 4306    |
+  | **Accuracy**     |           |        | 0.86     | 21386   |
+  | **Macro avg**    | 0.84      | 0.83   | 0.83     | 21386   |
+  | **Weighted avg** | 0.86      | 0.86   | 0.86     | 21386   |
+
+**CONCLUSIONES**
+
+- Hay que profundizar mucho en el tema de los Word Embeddings, seguiremos estudiandolo. Por otra parte debería revisar el conjunto de palabras para ver cuales no tienen sentido y que sean muy comunes y borrarlas ¿Afectará esto? entiendo que sí.
+
+**POR HACER**
+
+- Word Embeddings (Genéricos + Limpiar un poco los creados) -> Embeddings usando Transformers(BERT...) -> LLM, ChatGPT, etc...
+
+**CONCEPTOS**
+
+- El significado de las métricas del **classification_report**:
+  - *precision* : Porcentaje de predicciones positivas correctas en relación con el total de predicciones positivas
+  - *recall* : Porcentaje de predicciones positivas correctas en relación con el total de positivos reales
+  - *f1-score* : Media armónica ponderada de precision y recall. Cuanto más cercano es a uno mejor es el modelo
+    $$
+    F1 = \frac{\text{precision} \cdot \text{recall}}{\text{precision} + \text{recall}}
+    $$
+
+**RECURSOS**
+
+[Incrustaciones de palabras Tensorflow](https://www.tensorflow.org/text/guide/word_embeddings?hl=es-419)
+
+[Una guía rápida para la limpieza de texto usando l](https://www.kaggle.com/code/edwight/una-gu-a-r-pida-para-la-limpieza-de-texto-usando-l#Removing-Stopwords)
+
+[How to Develop Word Embeddings in Python with Gensim](https://machinelearningmastery.com/develop-word-embeddings-python-gensim/)
+
+[pypdf](https://pypdf.readthedocs.io/en/stable/)

@@ -6,3 +6,6 @@
 /.devcontainer
 /PDF
 /model.bin
+/.ipynb_checkpoints
+/.devcontainer
+/notebooks/.ipynb_checkpoints

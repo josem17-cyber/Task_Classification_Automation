@@ -9,3 +9,5 @@
 /.ipynb_checkpoints
 /.devcontainer
 /notebooks/.ipynb_checkpoints
+/data_spam
+/notebooks/spam.ipynb

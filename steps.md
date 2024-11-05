@@ -251,3 +251,17 @@ Abajo se muestra los resultados, al usar solo español, tenemos que aplicar STOP
 [How to Develop Word Embeddings in Python with Gensim](https://machinelearningmastery.com/develop-word-embeddings-python-gensim/)
 
 [pypdf](https://pypdf.readthedocs.io/en/stable/)
+
+### Implementación Detección SPAM (30/10/2024)
+
+- Hemos obtenido de la base de datos los correos borrados, es decir todos aquellos que son SPAM, respuestas automáticas... Después lo hemos unificado a la base de datos de los correos que ya son tareas creadas.
+- Esto va ser un primer paso a la implementación del modelo de clasificación de tal manera que podemos dictaminar si el correo es SPAM o no antes de clasificarlo
+- Estos son los resultados del modelo en una primera instancia:
+
+  | Clase            | precision | recall | f1-score | support |
+  | ---------------- | --------- | ------ | -------- | ------- |
+  | NO SPAM          | 0.95      | 0.98   | 0.96     | 3810    |
+  | SPAM             | 0.97      | 0.93   | 0.95     | 2799    |
+  | **accuracy**     |           |        | 0.96     | 6609    |
+  | **macro avg**    | 0.96      | 0.95   | 0.96     | 6609    |
+  | **weighted avg** | 0.96      | 0.96   | 0.96     | 6609    |

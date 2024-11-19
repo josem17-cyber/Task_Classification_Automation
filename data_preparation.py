@@ -19,24 +19,28 @@ def load_and_prepare_data(file_path):
         y (numpy.ndarray): Matriz de etiquetas con la columna codificada 'Categoria'.
         label_encoders (dict): Diccionario de objetos LabelEncoder ajustados para la columna 'Categoria'.
     """
+    def cat_simplification(df):
+        df['Categoria'] = df['Categoria'].replace({'PREP': 'P', 'PMOD': 'P', 'OMOD' : 'O', 'OREP' : 'O', 'SAT' : 'I', 'C': 'OTHER', 'D': 'OTHER', 'DOC': 'OTHER'})
+    
     # Cargar los datos
     df = pd.read_excel(file_path)
-
-    # Completar los valores faltantes en cada columna
-    df['Categoria'] = df['Categoria'].fillna("sin categoría")
+    
     df['Cuerpo'] = df['Cuerpo'].fillna("sin cuerpo")
+    df['De'] = df['De'].fillna("sin de")
+
+    df_filtred = df[df['CodigoTarea'].notna()]
     
-    def cat_simplification(df):
-        df['Categoria'] = df['Categoria'].replace({'PREP': 'P', 'PMOD': 'P', 'OMOD' : 'O', 'OREP' : 'O', 'SAT' : 'I'})
-    
-    # Agrupar por CodigoTarea y unir los correos electrónicos en una sola entrada
-    df = df.groupby(by='CodigoTarea').agg({
+    df_grouped = df_filtred.groupby(by='CodigoTarea').agg({
         'IDEmail': 'first',
+        'De': 'first',
         'Cuerpo': 'first',
-        'FechaCreacion': 'first',
         'Categoria': 'first'
     }).reset_index()
-
+    
+    df_nan = df[df['CodigoTarea'].isna()]
+    
+    df = pd.concat([df_grouped, df_nan], ignore_index=True)
+    
     # Preprocesamiento de texto
     nltk.download('stopwords')
     nltk.download('punkt')
@@ -52,7 +56,14 @@ def load_and_prepare_data(file_path):
         return ' '.join(words)
 
     df['Cuerpo'] = df['Cuerpo'].apply(preprocess_text)
-
+    df['Cuerpo'] = df['Cuerpo'] + df['De']
+    
+    cat_simplification(df)  
+    
+    print(df['Categoria'].value_counts())
+    
+    print(df.head())
+    
     # Vectorización TF-IDF
     tfidf = TfidfVectorizer(max_features=5000)
     X = tfidf.fit_transform(df['Cuerpo']).toarray()
@@ -65,7 +76,7 @@ def load_and_prepare_data(file_path):
     return X, y, label_encoders
 
 if __name__ == "__main__":
-    file_path = 'data/Consulta_JMA.xlsx'
+    file_path = 'data/final_data/CAT_SPAM_2023_E.xlsx'
     X, y, label_encoders = load_and_prepare_data(file_path)
     print(f"Características (X): {X.shape}")
     print(f"Etiquetas (y): {y.shape}")

@@ -59,7 +59,7 @@ def evaluate_model(model, X, y_categoria, label_encoders):
 
 if __name__ == "__main__":
     try:
-        file_path = 'data/Consulta_JMA.xlsx'
+        file_path = 'data/final_data/CAT_SPAM_2023_E.xlsx'
         X, y_categoria, label_encoders = load_data(file_path)
 
         num_classes_categoria = len(label_encoders['Categoria'].classes_)

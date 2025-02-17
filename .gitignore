@@ -12,3 +12,4 @@
 /notebooks/spam.ipynb
 /test_spam_model.py
 /presentacion_spam_model.md
+/spam_model.pkl
